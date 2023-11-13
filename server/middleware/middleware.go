@@ -130,24 +130,48 @@ func TaskComplete(task string) {
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{"status": true}}
 	result, err := collection.UpdateOne(context.Background(), filter, update)
-	if err!nil {
+	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("modified count:", result)
+	fmt.Println("modified count:", result.ModifiedCount)
 }
 
-func insertOneTask() {
+func insertOneTask(task models.ToDoList) {
+	insertResult, err := collection.InsertOne(context.Background(), task)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Inserted a single record", insertResult.InsertedID)
+}
+
+func UndoTask(task string) {
+	id, _ := primitive.ObjectIDFromHex(task)
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{"status": true}}
+	result, err := collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("modified count:", result.ModifiedCount)
 
 }
 
-func UndoTask() {
-
+func deleteOneTask(task string) {
+	id, _ := primitive.ObjectIDFromHex(task)
+	filter := bson.M{"_id": id}
+	d, err := collection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Deleted Document", d.DeletedCount)
 }
 
-func deleteOneTask() {
-
-}
-
-func deleteAllTasks() {
-
+func deleteAllTasks() int64 {
+	d, err := collection.DeleteMany(context.Background(bson.D{"_id"}))
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Deleted document")
+	return d.DeletedCount
 }
