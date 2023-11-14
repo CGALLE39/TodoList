@@ -16,6 +16,49 @@ class ToDoList extends Component {
     ComponentDidMount(){
         this.getTask();
     }
+    onChange = (event) => {
+        this.SetState({
+            [event.target.name] : event.target.value,
+        });
+    };
+
+    onSubmit
+
+    getTask = () => {
+        axios.get(endpoint + "/api/task").then((res)=>{
+            if (res.data){
+                this.setState({
+                    items: res.data.map((item)=> {
+                        let color = "yellow";
+                        let style = {
+                            wordWrap: "break-word",
+                        };
+
+                        if(item.status) {
+                            color="green";
+                            style["textDecorationLine"] = "line-through";
+                        }
+
+                        return(
+                            <Card key={item._id} color={color} fluid className="rough">
+                                <Card.Content>
+                                    <Card.Header textAlign="left">
+                                        <div style = {style}>{item.task}</div>
+                                    </Card.Header>
+                                </Card.Content>
+                            </Card>
+                        )
+                    })
+                })
+            }
+        })
+    }
+
+    updateTask
+
+    undoTask
+
+    deleteTask
 
     render() {
         return (
@@ -35,7 +78,11 @@ class ToDoList extends Component {
                         fluid
                         placeholder={"Create Task"}
                         />
+                        {/*<Button>Create task</Button>*/}
                     </form>
+                </div>
+                <div className="row">
+                    <Card.Group>{this.state.items}</Card.Group>
                 </div>
             </div>
         );

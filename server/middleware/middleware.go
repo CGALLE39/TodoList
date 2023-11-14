@@ -168,10 +168,10 @@ func deleteOneTask(task string) {
 }
 
 func deleteAllTasks() int64 {
-	d, err := collection.DeleteMany(context.Background(bson.D{"_id"}))
+	d, err := collection.DeleteMany(context.Background(), bson.D{{}})
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Deleted document")
+	fmt.Println("Deleted document", d)
 	return d.DeletedCount
 }
