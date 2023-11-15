@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import axios from "axios";
+import axios from "axinpm install react-axiosos";
 import {Card, Header, Form, Input, Icon} from "semantic-ui-react";
 
 let endpoint = "http/localhost:9000";
