@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/gorilla/mux"
-	"totolist/middleware"
+	middleware "totolist/middleware"
 )
 
 func Router() *mux.Router {

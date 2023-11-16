@@ -1,7 +1,7 @@
 import React from "react";
-import "../../client/src/App.css";
+import "./App.css";
 import {Container} from "semantic-ui-react";
-import ToDoList from "./To-Do-List";
+import ToDoList from "./To-Do-List.js";
 
 function App() {
   return (
