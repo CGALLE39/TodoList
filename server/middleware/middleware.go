@@ -35,7 +35,7 @@ func createDBInstance() {
 	dbName := os.Getenv("DB_NAME")
 	collName := os.Getenv("DB_COLLECTION_NAME")
 
-	clientOptions := options.Client().ApplyURL(connectionString)
+	clientOptions := options.Client().ApplyURI(connectionString)
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 
@@ -56,7 +56,8 @@ func createDBInstance() {
 func GetAllTasks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	payload := GetAllTasks()
+
+	payload := getAllTasks()
 	json.NewEncoder(w).Encode(payload)
 }
 
@@ -66,24 +67,30 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	var task models.ToDoList
-	json.NewEncoder(r.Body).Decode(&task)
+	json.NewDecoder(r.Body).Decode(&task)
 	insertOneTask(task)
 	json.NewEncoder(w).Encode(task)
 }
 
-func TaskComplete(w http.ResponseWriter, r http.Request) {
+func TaskComplete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "PUT")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 	params := mux.Vars(r)
-	TaskComplete(params["id"])
+	taskComplete(params["id"])
 	json.NewEncoder(w).Encode(params["id"])
 }
+func UndoTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "PUT")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-func UndoTask() {
-
+	params := mux.Vars(r)
+	taskComplete(params["id"])
+	json.NewEncoder(w).Encode(params["id"])
 }
 
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
@@ -112,9 +119,9 @@ func getAllTasks() []primitive.M {
 	var results []primitive.M
 	for cur.Next(context.Background()) {
 		var result bson.M
-		e := cur.Decode(&result)
-		if e != nil {
-			log.Fatal(e)
+		err := cur.Decode(&result)
+		if err != nil {
+			log.Fatal(err)
 		}
 		results = append(results, result)
 	}
@@ -125,7 +132,7 @@ func getAllTasks() []primitive.M {
 	return results
 }
 
-func TaskComplete(task string) {
+func taskComplete(task string) {
 	id, _ := primitive.ObjectIDFromHex(task)
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{"status": true}}
@@ -145,7 +152,7 @@ func insertOneTask(task models.ToDoList) {
 	fmt.Println("Inserted a single record", insertResult.InsertedID)
 }
 
-func UndoTask(task string) {
+func undoTask(task string) {
 	id, _ := primitive.ObjectIDFromHex(task)
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{"status": true}}
