@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="6c1d994b-b718-42de-9074-6c81161da7d2" name="todolist Mapping">
+      <data-sources db="c012a6b5-0690-434a-b61d-c365bd81f91a" />
+    </mapping>
+  </component>
+</project>

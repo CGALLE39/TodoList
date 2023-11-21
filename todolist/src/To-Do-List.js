@@ -64,11 +64,11 @@ class ToDoList extends Component {
                                     </Card.Header>
 
                                     <Card.Meta textAlign="right">
-                                        <Icon>
+                                        <Icon
                                             name="check circle"
                                             color="blue"
-                                            onClick{() => this.undoTask(item._id)}
-                                        </Icon>
+                                            onClick={() => this.undoTask(item._id)}
+                                        />
                                         <span style={{paddingRight: 10}}>Undo</span>
                                         <Icon
                                         name="delete"
@@ -91,7 +91,7 @@ class ToDoList extends Component {
     };
 
     updateTask = (id) => {
-        axios.put(endpoint + "/api/task" + id, {
+        axios.put(endpoint + "api/task" + id, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
